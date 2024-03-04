@@ -45,11 +45,29 @@ public void draw ()
     fill(255);
     textSize(30);
     text("Flags: " + flags, 100, 630);
-    if (loser)
+    if (loser) {
         displayLosingMessage();
+        frameRate(0);
+    }
     else if (isWon()) {
         displayWinningMessage();
         frameRate(0);
+    }
+}
+public void keyPressed() {
+    if (keyPressed() == "r") {
+        Interactive.make( this );
+    
+    //your code to initialize buttons goes here
+    buttons = new MSButton[NUM_ROWS][NUM_COLS];
+  for (int i = 0; i < buttons.length; i++) {
+    for (int j = 0; j < buttons[i].length; j++) {
+      buttons[i][j]= new MSButton(i,j);
+    }
+  }
+  for (int i = 0; i<99; i++)
+    setMines();
+    flags = mines.size();
     }
 }
 public boolean isWon()
