@@ -3,11 +3,18 @@ int NUM_ROWS = 24; int NUM_COLS = 24;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList <MSButton>();
 int flags = 0;
+int money = 99;
 boolean loser = false;
+boolean first = false;
+int ibaka;
+int jbaka;
+boolean second = false;
+
 void setup ()
 {
     size(600, 800);
     textAlign(CENTER,CENTER);
+    flags = money;
     
     // make the manager
     Interactive.make( this );
@@ -19,9 +26,6 @@ void setup ()
       buttons[i][j]= new MSButton(i,j);
     }
   }
-  for (int i = 0; i<99; i++)
-    setMines();
-    flags = mines.size();
 }
 public void setMines()
 {
@@ -29,7 +33,7 @@ public void setMines()
   int r = (int)(Math.random()*NUM_ROWS);
   int c = (int)(Math.random()*NUM_COLS);
   while (!add) {
-      if (!mines.contains(buttons[r][c])) {
+    if (!mines.contains(buttons[r][c]) && (ibaka-1 > r || ibaka+1 < r) && (jbaka-1 > c || jbaka+1 < c)) {
       mines.add(buttons[r][c]);
       add = true;
     }
@@ -52,22 +56,7 @@ public void draw ()
         frameRate(0);
     }
 }
-public void keyPressed() {
-    if (keyPressed() == "r") {
-        Interactive.make( this );
 
-    //your code to initialize buttons goes here
-    buttons = new MSButton[NUM_ROWS][NUM_COLS];
-  for (int i = 0; i < buttons.length; i++) {
-    for (int j = 0; j < buttons[i].length; j++) {
-      buttons[i][j]= new MSButton(i,j);
-    }
-  }
-  for (int i = 0; i<99; i++)
-    setMines();
-    flags = mines.size();
-    }
-}
 public boolean isWon()
 {
   int hola = 0;
@@ -75,7 +64,7 @@ public boolean isWon()
       if (mines.get(i).flagged)
         hola++;
     }
-    if (hola == mines.size())
+    if (hola == mines.size() && first)
     return true;
     return false;
 }
@@ -130,6 +119,15 @@ public class MSButton
     // called by manager
     public void mousePressed () 
     {
+      if (!first) {
+        ibaka = myRow;
+        jbaka = myCol;
+        if (!second) {
+        for (int i = 0; i<money; i++)
+          setMines();
+        second = true;
+        }
+      }
       if (mouseButton != RIGHT)
         clicked = true;
         if (mouseButton == RIGHT && !clicked) {
@@ -171,6 +169,7 @@ public class MSButton
               buttons[myRow][myCol-1].mousePressed();
           }
         }
+      first = true;
     }
     public void draw () 
     {    
